@@ -1,6 +1,6 @@
 const Message = require('../models/chat');
 
-exports.createMessage = async (data) => {
+exports.createMessage = async (data,res) => {
     console.log(data);
    try{ const message = new Message({
         message: data.message,
@@ -8,7 +8,9 @@ exports.createMessage = async (data) => {
         date: new Date()
    }    
     );
-    message.save();}
+    const savedMessage = await message.save();
+        
+}
         catch(error){
             console.log(error);
         }

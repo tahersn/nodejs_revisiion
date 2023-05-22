@@ -6,8 +6,9 @@
 <body>
     <h1>Chat</h1>
     <div id="messages"></div>
-    <form id="form" action="">
+    <form id="form" action="" onsubmit="return false;">
     <input id="input"  onKeyUp="typing()" /><button onclick="send()">Send</button>
+    <p id="typ"></p>
     </form>
 
     <script>
@@ -37,14 +38,17 @@
               socket.emit("typing", nom);
             }
             socket.on("typing",(data)=>{
-                const p = document.createElement("p");
-                p.innerText = data;
-                document.body.append(p);
+                const typingMessage = document.getElementById("typ");
+    typingMessage.innerText = nom + " is typing...";
+
+    setTimeout(() => {
+        typingMessage.remove();
+    }, 1000);
             })
             
             function send() {
               var message = document.getElementById("input").value;
-              socket.emit("savemessage", {
+              socket.emit("sendMessage", {
                 pseudo: nom,
                 message: message
               })

@@ -34,13 +34,20 @@ io.on('connection', function(socket) {
      socket.on("typing",function(data){
           socket.broadcast.emit("typing",data+" is typing ...");
      })       
-     socket.on("savemessage", function(data){
-          //socket.broadcast.emit("new user-message",data);
-          //console.log(data);
-          createMessage(data);
-          io.emit("newMessage",data);
+     socket.on('sendMessage', (data) => {
+          console.log(data);
+          if(data.pseudo !== null && data.pseudo !== "" && data.msg !== null && data.msg !== ""){
 
-     })
+          createMessage(data).then(console.log(data));
+        //to all
+          io.emit("newMessage", data);
+          
+        }
+        }
+        );
+     socket.on('disconnect',()=>{
+          console.log("user disconnected")
+     })   
 });
 mongoose.connect(mongoConnection.dbURL, {
      useNewUrlParser: true, 
