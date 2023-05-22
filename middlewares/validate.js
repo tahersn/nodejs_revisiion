@@ -2,9 +2,13 @@ const yup = require ("yup");
 
 const user= require ("../models/userModel")
 
-async function validateAttributes(req,res){
+async function validateAttributes(req,res,next){
     try{const schema = yup.object().shape({
-        name : yup.string().required("name is required").min(2,"name must be 2 or more caracters")
+        name : yup.string().required("name is required").min(2,"name must be 2 or more caracters"),
+        email : yup.string().email().required("email is required").matches(/^[a-zA-Z0-9]+@esprit.tn$/, "email must end with @esprit.tn"),
+        cin:yup.string().required("cin is required").length(8,"cin must be 8 caracters"),
+
+
 
     });
     await schema.validate(req.body);
@@ -14,6 +18,18 @@ async function validateAttributes(req,res){
     }
 
 }
+//validate email is in the correct format and ends with @esprit.tn
+// async function validateEmail(req,res){
+//     try{const schema = yup.object().shape({
+//         email : yup.string().email().required("email is required").matches(/^[a-zA-Z0-9]+@esprit.tn$/, "email must end with @esprit.tn")
+//     });
+//     await schema.validate(req.body);
+//     next();}catch(error){
+//         console.log(error);
+//         res.send(error.message)
+//     }
+
+// }
 
 
 
