@@ -1,0 +1,55 @@
+<html>
+<head>
+<title>Exam chat</title>
+<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Chat</h1>
+    <div id="messages"></div>
+    <form id="form" action="">
+    <input id="input"  onKeyUp="typing()" /><button onclick="send()">Send</button>
+    </form>
+
+    <script>
+      const socket = io.connect();
+            var nom = prompt("Taper votre nom");
+            if (nom!=null && nom!=""){  
+              socket.emit("new-user", nom + " est connecté");
+            }
+            else{
+                alert("Veuillez entrer un nom");
+            }
+            socket.on("new-user", (data) => {
+              const p = document.createElement("p");
+              p.innerText = data;
+              document.body.append(p);
+            });
+       
+           
+            socket.on("newMessage", (data) => {
+            p = document.createElement("p")
+            p.innerText = (data.pseudo + ":" + data.message)
+            document.body.append(p)
+            })
+
+            
+            function typing() {
+              socket.emit("typing", nom);
+            }
+            socket.on("typing",(data)=>{
+                const p = document.createElement("p");
+                p.innerText = data;
+                document.body.append(p);
+            })
+            
+            function send() {
+              var message = document.getElementById("input").value;
+              socket.emit("savemessage", {
+                pseudo: nom,
+                message: message
+              })
+           
+            }
+    </script>
+</body>
+</html>
