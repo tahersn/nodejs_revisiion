@@ -19,6 +19,7 @@ app.set("view engine",'twig');
 
 const UserRouter = require("./routes/userRouter");
 const ChatRouter = require("./routes/chatRouter");
+const { createMessage } = require('./controllers/chatController');
 app.use('/user',UserRouter);  
 app.use('/chat',ChatRouter);
 
@@ -35,7 +36,8 @@ io.on('connection', function(socket) {
      })       
      socket.on("savemessage", function(data){
           //socket.broadcast.emit("new user-message",data);
-          console.log(data);
+          //console.log(data);
+          createMessage(data);
           io.emit("newMessage",data);
 
      })
