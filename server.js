@@ -56,7 +56,8 @@ io.on('connection', function(socket) {
           deleteMessage(data).then((id)=>{
                io.emit("removeMessage",id)});
           console.log("deleted");
-     })   
+     }) 
+       
      socket.on('disconnect',()=>{
           console.log("user disconnected")
      })   
