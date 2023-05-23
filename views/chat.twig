@@ -1,59 +1,74 @@
 <html>
+
 <head>
-<title>Exam chat</title>
-<script src="/socket.io/socket.io.js"></script>
+  <title>Exam chat</title>
+  <script src="/socket.io/socket.io.js"></script>
 </head>
+
 <body>
-    <h1>Chat</h1>
-    <div id="messages"></div>
-    <form id="form" action="" onsubmit="return false;">
-    <input id="input"  onKeyUp="typing()" /><button onclick="send()">Send</button>
+  <h1>Chat</h1>
+  <div id="messages"></div>
+  <form id="form" action="" onsubmit="return false;">
+    <input id="input" onKeyUp="typing()" /><button onclick="send()">Send</button>
     <p id="typ"></p>
-    </form>
+  </form>
 
-    <script>
-      const socket = io.connect();
-            var nom = prompt("Taper votre nom");
-            if (nom!=null && nom!=""){  
-              socket.emit("new-user", nom + " est connecté");
-            }
-            else{
-                alert("Veuillez entrer un nom");
-            }
-            socket.on("new-user", (data) => {
-              const p = document.createElement("p");
-              p.innerText = data;
-              document.body.append(p);
-            });
-       
-           
-            socket.on("newMessage", (data) => {
-            p = document.createElement("p")
-            p.innerText = (data.pseudo + ":" + data.message)
-            document.body.append(p)
-            })
+  <script>
+    const socket = io.connect();
+    var nom = prompt("Taper votre nom");
+    if (nom != null && nom != "") {
+      socket.emit("new-user", nom + " est connecté");
+    }
+    else {
+      alert("Veuillez entrer un nom");
+    }
+    socket.on("new-user", (data) => {
+      const p = document.createElement("p");
+      p.innerText = data;
+      document.body.append(p);
+    });
 
-            
-            function typing() {
-              socket.emit("typing", nom);
-            }
-            socket.on("typing",(data)=>{
-                const typingMessage = document.getElementById("typ");
-    typingMessage.innerText = nom + " is typing...";
 
-    setTimeout(() => {
+    socket.on("newMessage", (data) => {
+      p = document.createElement("p")
+      p.innerText = (data.pseudo + ":" + data.message)
+      p.id = data._id
+      document.body.append(p)
+      b = document.createElement("button")
+      b.innerText = "Supprimer"
+      b.onclick = function () {
+        socket.emit("deleteMessage", data._id)
+      }
+      p.append(b)
+    })
+    socket.on("removeMessage", (id) => {
+      console.log("removing"+id);
+      p=document.getElementById(id)
+      p.remove()
+    })
+
+
+    function typing() {
+      socket.emit("typing", nom);
+    }
+    socket.on("typing", (data) => {
+      const typingMessage = document.getElementById("typ");
+      typingMessage.innerText = nom + " is typing...";
+
+      setTimeout(() => {
         typingMessage.remove();
-    }, 1000);
-            })
-            
-            function send() {
-              var message = document.getElementById("input").value;
-              socket.emit("sendMessage", {
-                pseudo: nom,
-                message: message
-              })
-           
-            }
-    </script>
+      }, 1000);
+    })
+
+    function send() {
+      var message = document.getElementById("input").value;
+      socket.emit("sendMessage", {
+        pseudo: nom,
+        message: message
+      })
+
+    }
+  </script>
 </body>
+
 </html>

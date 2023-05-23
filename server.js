@@ -6,6 +6,10 @@ const http = require ("http");
 const mongoose = require('mongoose');
 const mongoConnection= require('./config/dbConnection.json');
 const path =require("path");
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+
 
 
 
@@ -19,7 +23,7 @@ app.set("view engine",'twig');
 
 const UserRouter = require("./routes/userRouter");
 const ChatRouter = require("./routes/chatRouter");
-const { createMessage } = require('./controllers/chatController');
+const { createMessage,deleteMessage } = require('./controllers/chatController');
 app.use('/user',UserRouter);  
 app.use('/chat',ChatRouter);
 
@@ -38,13 +42,21 @@ io.on('connection', function(socket) {
           console.log(data);
           if(data.pseudo !== null && data.pseudo !== "" && data.msg !== null && data.msg !== ""){
 
-          createMessage(data).then(console.log(data));
+          createMessage(data).then((newMessage)=>{
+               console.log(newMessage);
+         
         //to all
-          io.emit("newMessage", data);
+          io.emit("newMessage", newMessage); })
           
         }
         }
         );
+     socket.on("deleteMessage",function(data){
+          console.log("deleting "+data);
+          deleteMessage(data).then((id)=>{
+               io.emit("removeMessage",id)});
+          console.log("deleted");
+     })   
      socket.on('disconnect',()=>{
           console.log("user disconnected")
      })   
