@@ -13,6 +13,7 @@ const upload = multer({ dest: 'uploads/' });
 
 
 
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -24,6 +25,7 @@ app.set("view engine",'twig');
 const UserRouter = require("./routes/userRouter");
 const ChatRouter = require("./routes/chatRouter");
 const { createMessage,deleteMessage } = require('./controllers/chatController');
+const {getByName}=require('./controllers/userController')
 app.use('/user',UserRouter);  
 app.use('/chat',ChatRouter);
 
@@ -41,7 +43,8 @@ io.on('connection', function(socket) {
      socket.on('sendMessage', (data) => {
           console.log(data);
           if(data.pseudo !== null && data.pseudo !== "" && data.msg !== null && data.msg !== ""){
-
+          data.user=getByName(data.pseudo)
+          console.log(data)
           createMessage(data).then((newMessage)=>{
                console.log(newMessage);
          

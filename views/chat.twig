@@ -67,6 +67,22 @@
       })
 
     }
+
+    fetch('/chat/messages')
+      .then(response => response.json()) // Parse the response as JSON
+      .then(data => {
+        // Iterate over the messages and create list items to display them
+        data.forEach(message => {
+            const p = document.createElement("p");
+     p.id = message._id;
+  p.innerText = message.pseudo + ": " + message.message;
+
+document.body.appendChild(p);
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   </script>
 </body>
 

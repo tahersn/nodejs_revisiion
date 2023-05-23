@@ -5,7 +5,8 @@ exports.createMessage = async (data,res) => {
    try{ const message = new Message({
         message: data.message,
         pseudo: data.pseudo,
-        date: new Date()
+        date: new Date(),
+        user:data.user
    }    
     );
     const savedMessage = await message.save();
@@ -15,6 +16,18 @@ exports.createMessage = async (data,res) => {
             console.log(error);
         }
 };
+exports.getMessages= async(req,res,next)=> {
+    console.log("Getting messages...");
+    try {
+        const messages = await Message.find();
+        res.status(200).json(messages);
+    }
+    catch (err) {
+        res.status(500).json({message: err.message});
+        console.log(err);
+    }
+}
+
 //get message by id and delete it
 exports.deleteMessage = async (id) => {
     console.log("id from controller"+id);
