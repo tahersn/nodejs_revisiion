@@ -1,32 +1,40 @@
 <html>
 
 <head>
-  <title>Exam chat</title>
+  <title>Exam </title>
   <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
-  <h1>Chat</h1>
+  <h1>Partie</h1>
   <div id="messages"></div>
-  <form id="form" action="" onsubmit="return false;">
-    <input id="input" onKeyUp="typing()" /><button onclick="send()">Send</button>
+  <br id="form" action="" onsubmit="return false;">
+    <label for="nomP">Nom partie:</label>
+    <input id="nomP" /><br></br>
+    <label for="joueur1">joueur 1:</label>
+    <input id="joueur1" /><br></br>
+    <label for="joueur2">joueur 2:</label>
+    <input id="joueur2" /><br></br>
+
+    <button onclick="create()">Envoyer</button><br></br>
+    <button onclick="send()">Afficher stat</button>
     <p id="typ"></p>
   </form>
 
   <script>
     const socket = io.connect();
-    var nom = prompt("Taper votre nom");
-    if (nom != null && nom != "") {
-      socket.emit("new-user", nom + " est connecté");
-    }
-    else {
-      alert("Veuillez entrer un nom");
-    }
-    socket.on("new-user", (data) => {
-      const p = document.createElement("p");
-      p.innerText = data;
-      document.body.append(p);
-    });
+   // var nom = prompt("Taper votre nom");
+    // if (nom != null && nom != "") {
+    //   socket.emit("new-user", nom + " est connecté");
+    // }
+    // else {
+    //   alert("Veuillez entrer un nom");
+    // }
+    // socket.on("new-user", (data) => {
+    //   const p = document.createElement("p");
+    //   p.innerText = data;
+    //   document.body.append(p);
+    // });
 
 
     socket.on("newMessage", (data) => {
@@ -67,6 +75,30 @@
       })
 
     }
+    function create(){
+      var nomP= document.getElementById("nomP").value;
+      var joueur1 = document.getElementById("joueur1").value;
+      var joueur2 = document.getElementById("joueur2").value;
+      socket.emit("createPartie",{
+        nom:nomP,
+        joueur1:joueur1,
+        joueur2:joueur2
+      })
+    }
+    socket.on("nouvPartie",(data)=>{
+      console.log(data)
+      liN = document.createElement("p")
+      liN.innerText = (data.nom)
+      document.body.append(liN)
+      li1 = document.createElement("p")
+      li1.innerText = (data.joueur1)
+      document.body.append(li1)
+      li2 = document.createElement("p")
+      li2.innerText = (data.joueur2)
+      document.body.append(li2)
+
+        })
+
 
     fetch('/chat/messages')
       .then(response => response.json()) // Parse the response as JSON

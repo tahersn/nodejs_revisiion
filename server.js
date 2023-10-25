@@ -24,10 +24,15 @@ app.set("view engine",'twig');
 
 const UserRouter = require("./routes/userRouter");
 const ChatRouter = require("./routes/chatRouter");
+const JoueursRouter = require("./routes/joueurRouter");
+const PartieRouter = require("./routes/partieRouter");
+const {createPartie} = require("./controllers/partieController")
 const { createMessage,deleteMessage } = require('./controllers/chatController');
 const {getByName}=require('./controllers/userController')
-app.use('/user',UserRouter);  
+app.use('/partie',PartieRouter);
+app.use('/joueur',JoueursRouter);
 app.use('/chat',ChatRouter);
+
 
 const server = http.createServer(app);
 const io = require ("socket.io")(server);
@@ -63,7 +68,13 @@ io.on('connection', function(socket) {
        
      socket.on('disconnect',()=>{
           console.log("user disconnected")
-     })   
+     })  
+     socket.on("createPartie",(data)=>{
+          console.log(data);
+         // createPartie(data);
+          io.emit("nouvPartie",(data)
+              );
+     }) 
 });
 mongoose.connect(mongoConnection.dbURL, {
      useNewUrlParser: true, 

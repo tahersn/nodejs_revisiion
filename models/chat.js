@@ -6,7 +6,12 @@ const Message = new schema({
     message: String,
     pseudo: String,
     date: Date,
-    user:User.schema
+    user:User.schema,
+    // user:{
+    //     type:mongoose.schema.Types.ObjectId,
+    //     ref:'User'
+    // }
+    
 });
 
-module.exports = mongoose.model('Message', Message);
+//module.exports = mongoose.model('Message', Message);

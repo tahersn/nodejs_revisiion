@@ -1,4 +1,4 @@
-const User = require ('../models/userModel.js')
+//const User = require ('../models/userModel.js')
 const multer = require('multer');
 
 
@@ -73,12 +73,12 @@ async function update(req,res){
     }
 }
 
-module.exports= {
-    create,
-    deleteUser,
-    GetAll,
-    getbyid,
-    update,
-    getByName,
-    createupload
-}
+// module.exports= {
+//     create,
+//     deleteUser,
+//     GetAll,
+//     getbyid,
+//     update,
+//     getByName,
+//     createupload
+// }
